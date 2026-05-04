@@ -3,7 +3,9 @@
 #include <iostream>  //FOR DEBUG ONLY
 
 Chess::Core::GameApp::GameApp() : 
- interactionController(game, selectionState, boardRenderer, moveIndicatorRenderer
+  interactionController(
+    game, selectionState, boardRenderer, 
+    moveIndicatorRenderer, soundManager
 ){
   window = sf::RenderWindow(
     sf::VideoMode({Config::windowWidth, Config::windowWidth}), 
@@ -19,10 +21,8 @@ void Chess::Core::GameApp::run(){
     handleEvents();
     game.updateStatus();
 
-    if(game.check()) //SEND A ALERT LATER
-      std::cout<<"CHECK!\n";
-
     if(game.finished()){
+      soundManager.playGameEndSound();  
       render();
       break;
     }
@@ -38,8 +38,8 @@ void Chess::Core::GameApp::run(){
 
   std::cout<<"\nJOGO FINALIZADO!\n";
   std::cin.get();
-  window.close();
 
+  window.close();
   game.end();
 }
 

@@ -4,7 +4,10 @@
 namespace Chess::Types{
   enum class Piece { None, Rook, Knight, Bishop, Queen, King, Pawn };
   enum class Color { None, White, Black };
-  enum class Status { Normal, Check, Stalemate, CheckMate };
+  enum class GameEvent{ 
+    Move, Capture, Check, Checkmate, Stalemate, 
+    Castle, Promotion, IllegalMove, Start 
+  };
 }
 
 namespace Chess{

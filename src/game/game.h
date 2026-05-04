@@ -8,13 +8,13 @@
 #include <vector>
 
 namespace Chess{
-  class Game{    //SUGEST FOR THINK LATER :::::: STORE KING POSITIONS, TO DECREASE CALCULATIONS IN VERIFY STALEMATE
+  class Game{    //SUGGEST FOR THINK LATER :::::: STORE KING POSITIONS, TO DECREASE CALCULATIONS IN VERIFY STALEMATE
     private:
     Board board;
     Player players[2];
     short int playerTurn = 1;
     bool running = false; 
-    Types::Status status = Types::Status::Normal;
+    Types::GameEvent status = Types::GameEvent::Start;
 
     void generatePieces();
     void removePieces();
@@ -23,7 +23,8 @@ namespace Chess{
     Game();
     Board &getBoard() { return board; }
     Player *getPlayers() { return players; }
-    Types::Status getStatus() const { return status; }
+    Types::GameEvent getStatus() const { return status; }
+    void setStatus(Types::GameEvent status) { this->status = status; }
     short int getPlayerTurn () { return playerTurn; }
     bool isRunning() const { return running; }
     void start(); 

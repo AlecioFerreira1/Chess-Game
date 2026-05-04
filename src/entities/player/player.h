@@ -2,6 +2,7 @@
 #include <string>
 #include "../board/board.h"
 #include "../../utils/utils.h"
+#include "../../utils/types.h"
 
 namespace Chess{
   class Player{
@@ -14,6 +15,6 @@ namespace Chess{
     ~Player();
     void setName(std::string name) { this->name = name; }
     std::string getName() { return name; }
-    void movePiece(Vec2 from, Vec2 to, Board &board);
+    Types::GameEvent movePiece(Vec2 from, Vec2 to, Board &board);
   };
 }

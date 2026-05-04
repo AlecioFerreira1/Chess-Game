@@ -103,11 +103,11 @@ bool Chess::Game::check(){
 }
 
 bool Chess::Game::checkmate(){
-  return status == Types::Status::CheckMate;
+  return status == Types::GameEvent::Checkmate;
 }
 
 bool Chess::Game::stalemate(){
-  return status == Types::Status::Stalemate;
+  return status == Types::GameEvent::Stalemate;
 }
 
 bool Chess::Game::verifyStalemate(){
@@ -137,18 +137,17 @@ void Chess::Game::updateStatus(){
   const bool isStaleMate = verifyStalemate();
   const bool isCheckMate = isCheck && isStaleMate;
 
-  if(isCheckMate) this->status = Types::Status::CheckMate;
-  else if(isStaleMate) this->status = Types::Status::Stalemate;
-  else if(isCheck) this->status = Types::Status::Check;
-  else this->status = Types::Status::Normal;
+  if(isCheckMate) this->status = Types::GameEvent::Checkmate;
+  else if(isStaleMate) this->status = Types::GameEvent::Stalemate;
+  else if(isCheck) this->status = Types::GameEvent::Check;
 }
 
 bool Chess::Game::finished(){
   if(
-    getStatus() == Types::Status::CheckMate || 
-    getStatus() == Types::Status::Stalemate
+    getStatus() == Types::GameEvent::Checkmate || 
+    getStatus() == Types::GameEvent::Stalemate
   ){ 
-    running = false;     //MEANWHILE 
+    running = false;  //CHANGE TO A CONFIRM DIALOG WINDOW
     return true;
   }
 

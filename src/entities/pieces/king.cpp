@@ -47,9 +47,9 @@ bool King::notAttacked(Vec2 move, const BoardMatrix &boardMatrix){
 
 std::vector<Vec2> King::getCastlingMoviments(const BoardMatrix &boardMatrix){
   std::vector<Vec2> moves;
+  const bool check = notAttacked(position, boardMatrix) == false;
 
-  if(Utils::momentaniumCheck({position, position}, boardMatrix))
-    return moves;
+  if(check) return moves;
 
   const int rooksRow = color == Types::Color::Black ? 0 : 7;
   
@@ -59,7 +59,7 @@ std::vector<Vec2> King::getCastlingMoviments(const BoardMatrix &boardMatrix){
   bool queenSide = boardMatrix[rooksRow][0] != nullptr && 
                    !boardMatrix[rooksRow][0]->wasMoved() &&
                   kingNotMoved;
-                  
+
   bool kingSide = boardMatrix[rooksRow][7] != nullptr && 
                   !boardMatrix[rooksRow][7]->wasMoved() && 
                   kingNotMoved; 

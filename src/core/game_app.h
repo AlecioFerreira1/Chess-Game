@@ -3,8 +3,9 @@
 #include <SFML/Graphics.hpp>
 #include "../game/game.h"
 #include "../config/config.h"
-#include "../draw/draw.h"
+#include "../render/render.h"
 #include "board_interaction_controller.h"
+#include "../audio/sound_manager.h"
 
 namespace Chess::Core{
   class GameApp{
@@ -16,6 +17,8 @@ namespace Chess::Core{
     Draw::MoveIndicatorRenderer moveIndicatorRenderer;
     SelectionState selectionState;
     BoardInteractionController interactionController;
+    Audio::SoundManager soundManager;
+    bool checkAlertPlayed = false;
 
     void handleEvents();
     void getInput(std::optional<sf::Event>& event);

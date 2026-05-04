@@ -4,10 +4,12 @@ Chess::Core::BoardInteractionController::BoardInteractionController(
   Game &game, 
   SelectionState &selectionState, 
   Draw::BoardRenderer &boardRenderer, 
-  Draw::MoveIndicatorRenderer &moveIndicatorRenderer
+  Draw::MoveIndicatorRenderer &moveIndicatorRenderer,
+  Audio::SoundManager& soundManager
 ) : 
-    game(game), selectionState(selectionState), 
-    boardRenderer(boardRenderer), moveIndicatorRenderer(moveIndicatorRenderer) { }
+  game(game), selectionState(selectionState), 
+  boardRenderer(boardRenderer), moveIndicatorRenderer(moveIndicatorRenderer), 
+  soundManager(soundManager) { }
 
 bool Chess::Core::BoardInteractionController::isEnemyPiece(Piece *piece) const{
   return (piece->getColor() == Types::Color::Black && game.getPlayerTurn() != 2) ||
@@ -69,9 +71,15 @@ void Chess::Core::BoardInteractionController::handleClick(sf::Vector2f mousePos)
     if(!game.invalidMove({from.y, from.x}, {to.y, to.x})){
       Player &player = game.getPlayers()[game.getPlayerTurn()];
       
-      player.movePiece({from.y, from.x}, {to.y, to.x}, game.getBoard());
+      auto event = player.movePiece({from.y, from.x}, {to.y, to.x}, game.getBoard());
+
+      game.setStatus(event);
+      game.updateStatus();
       game.changeTurn();
+      handleSound(event);
     }
+
+    else handleSound(Types::GameEvent::IllegalMove);
   }
 }
 
@@ -89,4 +97,37 @@ sf::Vector2i Chess::Core::BoardInteractionController::convertMousePosToBoardCoor
     boardCoords.x,
     flipedCoords ? 7 - boardCoords.y : boardCoords.y 
   };
+}
+
+void Chess::Core::BoardInteractionController::handleSound(Chess::Types::GameEvent event){
+  event = event != Types::GameEvent::IllegalMove ? game.getStatus() : event; 
+
+  switch (event){
+    case Types::GameEvent::Capture:
+      soundManager.playCaptureSound();
+      break;
+  
+    case Types::GameEvent::Move:
+      soundManager.playMovePieceSound();
+      break;
+    
+    case Types::GameEvent::IllegalMove:
+      soundManager.playIlegalMoveSound();
+      break;
+
+    case Types::GameEvent::Castle:
+      soundManager.playCastleSound();
+      break;
+    
+    case Types::GameEvent::Check:
+      soundManager.playMoveCheckSound();
+      break;
+    
+    case Types::GameEvent::Promotion:
+      soundManager.playPromotionSound();
+      break;
+
+    default:
+      break;
+  }
 }

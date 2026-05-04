@@ -1,9 +1,10 @@
 #pragma once
 
 #include "../game/game.h"
-#include "../draw/draw.h"
+#include "../render/render.h"
 #include "selection_state.h"
 #include "../config/config.h"
+#include "../audio/sound_manager.h"
 
 namespace Chess::Core{
   class BoardInteractionController{
@@ -12,6 +13,7 @@ namespace Chess::Core{
     SelectionState &selectionState;   
     Draw::BoardRenderer &boardRenderer;  
     Draw::MoveIndicatorRenderer &moveIndicatorRenderer;
+    Audio::SoundManager& soundManager;
 
     bool isEnemyPiece(Piece *piece) const;
     void clearSelection();
@@ -22,9 +24,11 @@ namespace Chess::Core{
     BoardInteractionController(Game &game, 
                                SelectionState &selectionState, 
                                Draw::BoardRenderer &boardRenderer, 
-                               Draw::MoveIndicatorRenderer &moveIndicatorRenderer
+                               Draw::MoveIndicatorRenderer &moveIndicatorRenderer,
+                               Audio::SoundManager& soundManager
     );
 
     void handleClick(sf::Vector2f mousePos);
+    void handleSound(Chess::Types::GameEvent event);
   };
 }
