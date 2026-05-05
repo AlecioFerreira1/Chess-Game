@@ -20,6 +20,4 @@ namespace Chess::Utils{
   std::vector<Vec2> genSlidingMoves(
     Vec2 pos, const BoardMatrix &boardMatrix, std::vector<Vec2> directions
   );
-
-  bool momentaniumCheck(std::tuple<Vec2, Vec2> move, Chess::BoardMatrix BoardMatrix, std::list<std::tuple<Vec2, Vec2>> &plays);
 }   

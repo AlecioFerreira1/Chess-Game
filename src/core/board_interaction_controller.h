@@ -11,8 +11,8 @@ namespace Chess::Core{
     private:
     Game &game;   
     SelectionState &selectionState;   
-    Draw::BoardRenderer &boardRenderer;  
-    Draw::MoveIndicatorRenderer &moveIndicatorRenderer;
+    Render::BoardRenderer &boardRenderer;  
+    Render::MoveIndicatorRenderer &moveIndicatorRenderer;
     Audio::SoundManager &soundManager;
 
     bool isEnemyPiece(Piece *piece) const;
@@ -23,8 +23,8 @@ namespace Chess::Core{
     public:
     BoardInteractionController(Game &game, 
                                SelectionState &selectionState, 
-                               Draw::BoardRenderer &boardRenderer, 
-                               Draw::MoveIndicatorRenderer &moveIndicatorRenderer,
+                               Render::BoardRenderer &boardRenderer, 
+                               Render::MoveIndicatorRenderer &moveIndicatorRenderer,
                                Audio::SoundManager& soundManager
     );
 

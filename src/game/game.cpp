@@ -3,6 +3,9 @@
 Chess::Game::Game(){ }
 
 void Chess::Game::start(){
+  status = Types::GameEvent::Start;
+  blackKingPos = {0, 4}, whiteKingPos = {7, 4};
+
   generatePieces();
 
   std::string name[2] = {"Player 1", "Player 2"};
@@ -85,10 +88,16 @@ bool Chess::Game::invalidMove(Vec2 from, Vec2 to){
 
   for(Vec2 move : moves){   
     if(to.row == move.row && to.col == move.col){
-      if(Utils::momentaniumCheck({from, to}, boardMatrix, plays))
-        return true;
+      if(momentaniumCheck({from, to})) return true;
 
-      else return false;
+      else{
+        if(piece->getType() == Types::Piece::King){
+          if(piece->getColor() == Types::Color::White) whiteKingPos = to;
+          else blackKingPos = to;
+        }
+
+        return false;
+      }
     }
   }
 
@@ -138,10 +147,17 @@ bool Chess::Game::verifyStalemate(){
       Piece *piece = boardMatrix[i][j];
 
       if(piece != nullptr && piece->getColor() == color){
-        for(const Vec2& target : piece->getMoves(boardMatrix)){
+        std::vector<Vec2> moves = piece->getMoves(boardMatrix);
+
+        if(piece->getType() == Types::Piece::Pawn){
+          Chess::Pawn *pawn = static_cast<Pawn *>(piece);
+          moves = pawn->getMoves(boardMatrix, plays);
+        }
+
+        for(const Vec2& target : moves){
           std::tuple<Vec2, Vec2> move = std::tuple(piece->getPosition(), target); 
 
-          if(Utils::momentaniumCheck(move, boardMatrix, plays) == false)
+          if(momentaniumCheck(move) == false)
             return false;
         }
       }
@@ -184,10 +200,46 @@ std::vector<Vec2> Chess::Game::filterMovesToAvoidInconsistencies(Piece *pieceSel
   }
 
   for(const Vec2 &move : moves){ 
-    if(Utils::momentaniumCheck({pieceSelected->getPosition(), move}, boardMatrix, plays) == false){
+    if(momentaniumCheck({pieceSelected->getPosition(), move}) == false){
       filteredMoves.push_back(move);
     }
   }
 
   return filteredMoves;
+}
+
+bool Chess::Game::momentaniumCheck(std::tuple<Vec2, Vec2> move){
+  using namespace Chess;
+
+  Vec2 from = std::get<0>(move), to = std::get<1>(move); 
+
+  if(from.row == -1) return false; 
+
+  BoardMatrix boardMatrix = board.getInfo();
+  Piece *pieceFrom = boardMatrix[from.row][from.col];
+  const Types::Color color = pieceFrom->getColor();
+
+  if(pieceFrom->getType() == Types::Piece::Pawn){
+    Pawn *pawn = static_cast<Pawn *>(pieceFrom);
+
+    if(pawn->enPassant(boardMatrix, plays)){
+      boardMatrix[to.row - pawn->getOrientation()][to.col] = nullptr;
+    }
+  }
+
+  boardMatrix[from.row][from.col] = nullptr;
+  boardMatrix[to.row][to.col] = pieceFrom;
+
+  if(pieceFrom->getType() == Types::Piece::King){
+    King *king = static_cast<King *>(pieceFrom);
+    return king->notAttacked(to, boardMatrix) == false;
+  }
+
+  Vec2 kingPos = whiteKingPos;
+
+  if(pieceFrom->getColor() == Types::Color::Black)
+    kingPos = blackKingPos;
+
+  King *king = static_cast<King *>(boardMatrix[kingPos.row][kingPos.col]);
+  return king->notAttacked(king->getPosition(), boardMatrix) == false;
 }

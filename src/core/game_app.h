@@ -12,9 +12,9 @@ namespace Chess::Core{
     private:
     sf::RenderWindow window;
     Game game;
-    Draw::BoardRenderer boardRenderer;
-    Draw::PieceRenderer pieceRenderer;
-    Draw::MoveIndicatorRenderer moveIndicatorRenderer;
+    Render::BoardRenderer boardRenderer;
+    Render::PieceRenderer pieceRenderer;
+    Render::MoveIndicatorRenderer moveIndicatorRenderer;
     SelectionState selectionState;
     BoardInteractionController interactionController;
     Audio::SoundManager soundManager;

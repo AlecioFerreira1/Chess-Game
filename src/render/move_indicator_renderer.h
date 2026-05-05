@@ -4,7 +4,7 @@
 #include <vector>
 #include "../utils/utils.h"
 
-namespace Chess::Draw{
+namespace Chess::Render{
   class MoveIndicatorRenderer{
     private:
     struct Mark{

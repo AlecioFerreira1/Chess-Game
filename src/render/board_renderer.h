@@ -4,7 +4,7 @@
 #include "../utils/types.h"
 #include "../textures/load_textures.h"
 
-namespace Chess::Draw{
+namespace Chess::Render{
   class BoardRenderer{
     private:
     sf::RectangleShape square[8][8];

@@ -1,13 +1,13 @@
 #include "move_indicator_renderer.h"
 
-void Chess::Draw::MoveIndicatorRenderer::setMoves(std::vector<Vec2> moves) { 
+void Chess::Render::MoveIndicatorRenderer::setMoves(std::vector<Vec2> moves) { 
   for(Vec2 move : moves){
-    marks.push_back({sf::CircleShape(), {move.col, move.row}});
+    marks.push_back({sf::CircleShape(), Vec2::toVector2i(move)});
     marks[marks.size() - 1].shape.setFillColor(sf::Color(100.f, 100.f, 100.f, 100.f));
   } 
 }
 
-void Chess::Draw::MoveIndicatorRenderer::draw(
+void Chess::Render::MoveIndicatorRenderer::draw(
   sf::RenderWindow &renderWindow, float squareSize, sf::Vector2f boardPos, bool fliped
 ){
   for(Mark &mark : marks){
@@ -32,6 +32,6 @@ void Chess::Draw::MoveIndicatorRenderer::draw(
   }
 }
 
-void Chess::Draw::MoveIndicatorRenderer::clear(){
+void Chess::Render::MoveIndicatorRenderer::clear(){
   marks.clear();
 }

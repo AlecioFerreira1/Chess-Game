@@ -8,7 +8,7 @@
 #include <vector>
 
 namespace Chess{
-  class Game{    //SUGGEST FOR THINK LATER :::::: STORE KING POSITIONS, TO DECREASE CALCULATIONS IN VERIFY STALEMATE
+  class Game{ 
     private:
     Board board;
     Player players[2];
@@ -16,9 +16,11 @@ namespace Chess{
     bool running = false; 
     Types::GameEvent status = Types::GameEvent::Start;
     std::list<std::tuple<Vec2, Vec2>> plays;
+    Vec2 blackKingPos = {0, 4}, whiteKingPos = {7, 4};
 
     void generatePieces();
     void removePieces();
+    bool momentaniumCheck(std::tuple<Vec2, Vec2> move);
 
     public:
     Game();
@@ -31,6 +33,7 @@ namespace Chess{
     bool isRunning() const { return running; }
     void start(); 
     void end();
+    void restart();
     bool invalidMove(Vec2 from, Vec2 to);
     void updateStatus();
     void changeTurn();
@@ -40,6 +43,5 @@ namespace Chess{
     bool finished();
     bool verifyStalemate();
     std::vector<Vec2> filterMovesToAvoidInconsistencies(Piece *pieceSelected);
-    void restart();
   };
 }

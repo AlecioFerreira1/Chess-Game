@@ -35,45 +35,6 @@ namespace Chess::Utils{
 
     return moves; 
   }
-
-  bool momentaniumCheck(std::tuple<Vec2, Vec2> move, Chess::BoardMatrix boardMatrix, std::list<std::tuple<Vec2, Vec2>> &plays){
-    Vec2 from = std::get<0>(move), to = std::get<1>(move); 
-
-    if(from.row == -1) return false; 
-
-    Piece *pieceFrom = boardMatrix[from.row][from.col];
-    const Types::Color color = pieceFrom->getColor();
-
-    if(pieceFrom->getType() == Types::Piece::Pawn){
-      Pawn *pawn = static_cast<Pawn *>(pieceFrom);
-
-      if(pawn->enPassant(boardMatrix, plays)){
-        boardMatrix[to.row - pawn->getOrientation()][to.col] = nullptr;
-      }
-    }
-
-    boardMatrix[from.row][from.col] = nullptr;
-    boardMatrix[to.row][to.col] = pieceFrom;
-
-    if(pieceFrom->getType() == Types::Piece::King){
-      King *king = static_cast<King *>(pieceFrom);
-      return king->notAttacked(to, boardMatrix) == false;
-    }
-
-    for(int i = 0; i < 8; ++i){
-      for(int j = 0; j < 8; ++j){
-        if(
-          boardMatrix[i][j] != nullptr && boardMatrix[i][j]->getColor() == color && 
-          boardMatrix[i][j]->getType() == Types::Piece::King
-        ){
-          King *king = static_cast<King *>(boardMatrix[i][j]);
-          return king->notAttacked(king->getPosition(), boardMatrix) == false;
-        }
-     }
-   }
-
-    return false;
-  }
 }
 
 sf::Vector2i Vec2::toVector2i(Vec2 coords){

@@ -99,7 +99,7 @@ void Chess::Core::GameApp::render(){
   
   boardRenderer.draw(window, center, flipSides);
   renderPieces(flipSides);
-  
+
   moveIndicatorRenderer.draw(
     window, boardRenderer.getSquareSize(), 
     boardRenderer.getBoardPos(), flipSides

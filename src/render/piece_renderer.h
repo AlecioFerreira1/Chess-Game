@@ -7,7 +7,7 @@
 #include "../entities/pieces/piece.h"
 #include "../config/config.h"
 
-namespace Chess::Draw{
+namespace Chess::Render{
   class PieceRenderer{
     private:
     std::vector<sf::Sprite> whitePieces; 

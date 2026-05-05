@@ -1,6 +1,6 @@
 #include "piece_renderer.h"
 
-Chess::Draw::PieceRenderer::PieceRenderer(){
+Chess::Render::PieceRenderer::PieceRenderer(){
   this->whitePieces = {
     allTextures.whitePawnSprite(), allTextures.whiteRookSprite(), 
     allTextures.whiteKnightSprite(), allTextures.whiteBishopSprite(),
@@ -14,7 +14,7 @@ Chess::Draw::PieceRenderer::PieceRenderer(){
   };
 }
 
-void Chess::Draw::PieceRenderer::draw(
+void Chess::Render::PieceRenderer::draw(
   sf::RenderWindow &renderWindow, Piece *&piece, float squareSize, 
   sf::Vector2f boardPos, bool fliped
 ){

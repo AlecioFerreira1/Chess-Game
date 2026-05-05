@@ -3,8 +3,8 @@
 Chess::Core::BoardInteractionController::BoardInteractionController(
   Game &game, 
   SelectionState &selectionState, 
-  Draw::BoardRenderer &boardRenderer, 
-  Draw::MoveIndicatorRenderer &moveIndicatorRenderer,
+  Render::BoardRenderer &boardRenderer, 
+  Render::MoveIndicatorRenderer &moveIndicatorRenderer,
   Audio::SoundManager& soundManager
 ) : 
   game(game), selectionState(selectionState), 
@@ -99,32 +99,10 @@ sf::Vector2i Chess::Core::BoardInteractionController::convertMousePosToBoardCoor
 void Chess::Core::BoardInteractionController::handleSound(Chess::Types::GameEvent event){
   event = event != Types::GameEvent::IllegalMove ? game.getStatus() : event; 
 
-  switch (event){
-    case Types::GameEvent::Capture:
-      soundManager.playCaptureSound();
-      break;
-  
-    case Types::GameEvent::Move:
-      soundManager.playMovePieceSound();
-      break;
-    
-    case Types::GameEvent::IllegalMove:
-      soundManager.playIlegalMoveSound();
-      break;
-
-    case Types::GameEvent::Castle:
-      soundManager.playCastleSound();
-      break;
-    
-    case Types::GameEvent::Check:
-      soundManager.playMoveCheckSound();
-      break;
-    
-    case Types::GameEvent::Promotion:
-      soundManager.playPromotionSound();
-      break;
-
-    default:
-      break;
-  }
+  if(event == Types::GameEvent::Capture) soundManager.playCaptureSound();
+  else if(event == Types::GameEvent::Move) soundManager.playMovePieceSound();
+  else if(event == Types::GameEvent::IllegalMove) soundManager.playIlegalMoveSound();
+  else if(event == Types::GameEvent::Castle) soundManager.playCastleSound();
+  else if(event == Types::GameEvent::Check) soundManager.playMoveCheckSound();
+  else if(event == Types::GameEvent::Promotion) soundManager.playPromotionSound();
 }

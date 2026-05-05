@@ -2,7 +2,7 @@
 #include "piece_renderer.h"
 #include "colors.h"
 
-Chess::Draw::BoardRenderer::BoardRenderer(){ 
+Chess::Render::BoardRenderer::BoardRenderer(){ 
   for(int i = 0; i < 8; ++i){
     rows.push_back(sf::Text(allTextures.getFont(), std::string(1, ('8' - i))));
     rows[i].setFillColor(i % 2 == 0 ? Colors::dark : Colors::light);
@@ -19,7 +19,7 @@ Chess::Draw::BoardRenderer::BoardRenderer(){
   }
 }
 
-void Chess::Draw::BoardRenderer::draw(sf::RenderWindow &renderWindow, sf::Vector2f upLeft, bool fliped){
+void Chess::Render::BoardRenderer::draw(sf::RenderWindow &renderWindow, sf::Vector2f upLeft, bool fliped){
   for(int i = 0; i < 8; ++i){
     rows[i].setString(fliped ? std::string(1, '1' + i) : std::string(1, '8' - i));
     columns[i].setString(fliped ? std::string(1, 'h' - i) : std::string(1, 'a' + i));
@@ -54,14 +54,14 @@ void Chess::Draw::BoardRenderer::draw(sf::RenderWindow &renderWindow, sf::Vector
   }
 }
 
-void Chess::Draw::BoardRenderer::select(sf::Vector2i coords){
+void Chess::Render::BoardRenderer::select(sf::Vector2i coords){
   sf::Color color = square[coords.y][coords.x].getFillColor() == Colors::dark ? 
                     Colors::darkSelection : Colors::lightSelecion; 
 
   square[coords.y][coords.x].setFillColor(color);
 }
 
-void Chess::Draw::BoardRenderer::deSelect(sf::Vector2i coords){
+void Chess::Render::BoardRenderer::deSelect(sf::Vector2i coords){
   sf::Color color = square[coords.y][coords.x].getFillColor() == Colors::darkSelection ? 
                     Colors::dark : Colors::light; 
 
