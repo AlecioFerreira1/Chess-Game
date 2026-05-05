@@ -52,10 +52,7 @@ void Chess::Core::BoardInteractionController::handleClick(sf::Vector2f mousePos)
       sf::Vector2i pieceSelectedCoords = selectionState.getfrom().value();
       Piece *pieceSelected = boardMatrix[pieceSelectedCoords.y][pieceSelectedCoords.x];
 
-      moveIndicatorRenderer.setMoves(Vec2::vectorOfVec2ToVectorOfVector2i(
-        game.filterMovesToAvoidInconsistencies(pieceSelected)
-      ));
-
+      moveIndicatorRenderer.setMoves(game.filterMovesToAvoidInconsistencies(pieceSelected));
       return;
     }
   }
@@ -71,7 +68,7 @@ void Chess::Core::BoardInteractionController::handleClick(sf::Vector2f mousePos)
     if(!game.invalidMove({from.y, from.x}, {to.y, to.x})){
       Player &player = game.getPlayers()[game.getPlayerTurn()];
       
-      auto event = player.movePiece({from.y, from.x}, {to.y, to.x}, game.getBoard());
+      auto event = player.movePiece({from.y, from.x}, {to.y, to.x}, game.getBoard(), game.getPlays());
 
       game.setStatus(event);
       game.updateStatus();

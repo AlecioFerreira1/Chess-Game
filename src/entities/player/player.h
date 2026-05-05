@@ -15,6 +15,6 @@ namespace Chess{
     ~Player();
     void setName(std::string name) { this->name = name; }
     std::string getName() { return name; }
-    Types::GameEvent movePiece(Vec2 from, Vec2 to, Board &board);
+    Types::GameEvent movePiece(Vec2 from, Vec2 to, Board &board, std::list<std::tuple<Vec2, Vec2>> &plays);
   };
 }

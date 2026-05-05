@@ -37,7 +37,8 @@ namespace Chess{
     public:
     Pawn(Types::Color color, Vec2 position = {-1, -1});
     std::vector<Vec2> getMoves(const BoardMatrix &boardMatrix) override;
-    bool enPassant(const BoardMatrix &boardMatrix);
+    std::vector<Vec2> getMoves(const BoardMatrix &boardMatrix, const std::list<std::tuple<Vec2, Vec2>> &plays);
+    bool enPassant(const BoardMatrix &boardMatrix, const std::list<std::tuple<Vec2, Vec2>> &plays);
     bool promotion(const BoardMatrix &boardMatrix);
   };
 

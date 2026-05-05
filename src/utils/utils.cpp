@@ -3,8 +3,6 @@
 #include "../entities/pieces/piece.h"
 
 namespace Chess::Utils{
-  std::list<std::tuple<Vec2, Vec2>> plays;
-
   std::vector<Vec2> genSlidingMoves(   //FOR ROOK, BISHOP AND QUEEN MOVES
     Vec2 position, const BoardMatrix &boardMatrix, std::vector<Vec2> directions
   ){
@@ -38,7 +36,7 @@ namespace Chess::Utils{
     return moves; 
   }
 
-  bool momentaniumCheck(std::tuple<Vec2, Vec2> move, Chess::BoardMatrix boardMatrix){
+  bool momentaniumCheck(std::tuple<Vec2, Vec2> move, Chess::BoardMatrix boardMatrix, std::list<std::tuple<Vec2, Vec2>> &plays){
     Vec2 from = std::get<0>(move), to = std::get<1>(move); 
 
     if(from.row == -1) return false; 
@@ -49,7 +47,7 @@ namespace Chess::Utils{
     if(pieceFrom->getType() == Types::Piece::Pawn){
       Pawn *pawn = static_cast<Pawn *>(pieceFrom);
 
-      if(pawn->enPassant(boardMatrix)){
+      if(pawn->enPassant(boardMatrix, plays)){
         boardMatrix[to.row - pawn->getOrientation()][to.col] = nullptr;
       }
     }
@@ -80,14 +78,4 @@ namespace Chess::Utils{
 
 sf::Vector2i Vec2::toVector2i(Vec2 coords){
   return {coords.col, coords.row};
-}
-
-std::vector<sf::Vector2i> Vec2::vectorOfVec2ToVectorOfVector2i(std::vector<Vec2> vector){
-  std::vector<sf::Vector2i> newVector;
-
-  for(Vec2 &coord : vector){
-    newVector.push_back(toVector2i(coord));
-  }
-
-  return newVector;
 }

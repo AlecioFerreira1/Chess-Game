@@ -8,7 +8,7 @@ Chess::Player::Player(std::string name){
 
 Chess::Player::~Player(){}
 
-Chess::Types::GameEvent Chess::Player::movePiece(Vec2 from, Vec2 to, Board &board){
+Chess::Types::GameEvent Chess::Player::movePiece(Vec2 from, Vec2 to, Board &board, std::list<std::tuple<Vec2, Vec2>> &plays){
   Types::GameEvent eventType = Types::GameEvent::Move;
   BoardMatrix &boardMatrix = board.getInfo();
   Piece *&piece = boardMatrix[from.row][from.col];
@@ -18,8 +18,10 @@ Chess::Types::GameEvent Chess::Player::movePiece(Vec2 from, Vec2 to, Board &boar
   bool isPawn = piece->getType() == Types::Piece::Pawn;
   Pawn *pawn = isPawn ? static_cast<Pawn *>(piece) : nullptr;
   
-  if(isPawn && pawn->enPassant(boardMatrix))
+  if(isPawn && pawn->enPassant(boardMatrix, plays)){
     board.dealWithEnPassant(pawn, to);
+    eventType = Types::GameEvent::Capture;
+  }
 
   if(piece->getType() == Types::Piece::King){
     King *king = static_cast<King *>(piece);
@@ -47,7 +49,7 @@ Chess::Types::GameEvent Chess::Player::movePiece(Vec2 from, Vec2 to, Board &boar
     eventType = Types::GameEvent::Promotion;
   }
 
-  Utils::plays.push_back(std::tuple<Vec2, Vec2>(from, to));
+  plays.push_back(std::tuple<Vec2, Vec2>(from, to));
 
   return eventType;
 }     

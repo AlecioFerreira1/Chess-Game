@@ -13,7 +13,7 @@ namespace Chess::Core{
     SelectionState &selectionState;   
     Draw::BoardRenderer &boardRenderer;  
     Draw::MoveIndicatorRenderer &moveIndicatorRenderer;
-    Audio::SoundManager& soundManager;
+    Audio::SoundManager &soundManager;
 
     bool isEnemyPiece(Piece *piece) const;
     void clearSelection();

@@ -15,6 +15,7 @@ namespace Chess{
     short int playerTurn = 1;
     bool running = false; 
     Types::GameEvent status = Types::GameEvent::Start;
+    std::list<std::tuple<Vec2, Vec2>> plays;
 
     void generatePieces();
     void removePieces();
@@ -26,6 +27,7 @@ namespace Chess{
     Types::GameEvent getStatus() const { return status; }
     void setStatus(Types::GameEvent status) { this->status = status; }
     short int getPlayerTurn () { return playerTurn; }
+    std::list<std::tuple<Vec2, Vec2>> &getPlays() { return plays; }
     bool isRunning() const { return running; }
     void start(); 
     void end();
@@ -38,5 +40,6 @@ namespace Chess{
     bool finished();
     bool verifyStalemate();
     std::vector<Vec2> filterMovesToAvoidInconsistencies(Piece *pieceSelected);
+    void restart();
   };
 }

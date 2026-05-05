@@ -17,7 +17,7 @@ namespace Chess::Draw{
 
     public:
     MoveIndicatorRenderer() = default;
-    void setMoves(std::vector<sf::Vector2i> moves);
+    void setMoves(std::vector<Vec2> moves);
     void draw(sf::RenderWindow &renderWindow, float squareSize, sf::Vector2f boardPos, bool fliped = false);
     void clear();
   };

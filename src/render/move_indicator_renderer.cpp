@@ -1,8 +1,8 @@
 #include "move_indicator_renderer.h"
 
-void Chess::Draw::MoveIndicatorRenderer::setMoves(std::vector<sf::Vector2i> moves) { 
-  for(sf::Vector2i move : moves){
-    marks.push_back({sf::CircleShape(), move});
+void Chess::Draw::MoveIndicatorRenderer::setMoves(std::vector<Vec2> moves) { 
+  for(Vec2 move : moves){
+    marks.push_back({sf::CircleShape(), {move.col, move.row}});
     marks[marks.size() - 1].shape.setFillColor(sf::Color(100.f, 100.f, 100.f, 100.f));
   } 
 }

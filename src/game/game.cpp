@@ -1,10 +1,10 @@
 #include "game.h"
 
-Chess::Game::Game(){
-  generatePieces();
-}
+Chess::Game::Game(){ }
 
 void Chess::Game::start(){
+  generatePieces();
+
   std::string name[2] = {"Player 1", "Player 2"};
 
   for(int i : {0, 1}){
@@ -16,6 +16,12 @@ void Chess::Game::start(){
 
 void Chess::Game::end(){
   removePieces();
+  plays.clear();
+}
+
+void Chess::Game::restart(){
+  end();
+  start();
 }
 
 void Chess::Game::changeTurn(){
@@ -68,12 +74,18 @@ bool Chess::Game::invalidMove(Vec2 from, Vec2 to){
                           (playerTurn == 2 && piece->getColor() == Types::Color::Black)) ?
                           true : false;
 
-  if(!correctColorPieceToMove) 
-    return true;
+  if(!correctColorPieceToMove) return true;
+  
+  std::vector<Vec2> moves = piece->getMoves(boardMatrix);
 
-  for(Vec2 move : piece->getMoves(boardMatrix)){   
+  if(piece->getType() == Types::Piece::Pawn){
+    Chess::Pawn *pawn = static_cast<Pawn *>(piece);
+    moves = pawn->getMoves(boardMatrix, plays);
+  }
+
+  for(Vec2 move : moves){   
     if(to.row == move.row && to.col == move.col){
-      if(Utils::momentaniumCheck({from, to}, boardMatrix))
+      if(Utils::momentaniumCheck({from, to}, boardMatrix, plays))
         return true;
 
       else return false;
@@ -84,14 +96,21 @@ bool Chess::Game::invalidMove(Vec2 from, Vec2 to){
 }
 
 bool Chess::Game::check(){
-  if(Utils::plays.empty()) return false;
+  if(plays.empty()) return false;
 
-  const std::tuple<Vec2, Vec2> lastMove = Utils::plays.back();
+  const std::tuple<Vec2, Vec2> lastMove = plays.back();
   const Vec2 pieceLocated = std::get<1>(lastMove);
   const BoardMatrix &boardMatrix = board.getInfo();
   Piece *piece = boardMatrix[pieceLocated.row][pieceLocated.col];
 
-  for(const Vec2& pos : piece->getMoves(boardMatrix)){
+  std::vector<Vec2> moves = piece->getMoves(boardMatrix);
+
+  if(piece->getType() == Types::Piece::Pawn){
+    Chess::Pawn *pawn = static_cast<Pawn *>(piece);
+    moves = pawn->getMoves(boardMatrix, plays);
+  }
+
+  for(const Vec2& pos : moves){
     if(
       boardMatrix[pos.row][pos.col] != nullptr &&
       boardMatrix[pos.row][pos.col]->getType() == Types::Piece::King &&
@@ -122,7 +141,7 @@ bool Chess::Game::verifyStalemate(){
         for(const Vec2& target : piece->getMoves(boardMatrix)){
           std::tuple<Vec2, Vec2> move = std::tuple(piece->getPosition(), target); 
 
-          if(Utils::momentaniumCheck(move, boardMatrix) == false)
+          if(Utils::momentaniumCheck(move, boardMatrix, plays) == false)
             return false;
         }
       }
@@ -159,8 +178,13 @@ std::vector<Vec2> Chess::Game::filterMovesToAvoidInconsistencies(Piece *pieceSel
   std::vector<Vec2> moves = pieceSelected->getMoves(boardMatrix);
   std::vector<Vec2> filteredMoves;
 
+  if(pieceSelected->getType() == Types::Piece::Pawn){
+    Chess::Pawn *pawn = static_cast<Pawn *>(pieceSelected);
+    moves = pawn->getMoves(boardMatrix, plays);
+  }
+
   for(const Vec2 &move : moves){ 
-    if(Utils::momentaniumCheck({pieceSelected->getPosition(), move}, boardMatrix) == false){
+    if(Utils::momentaniumCheck({pieceSelected->getPosition(), move}, boardMatrix, plays) == false){
       filteredMoves.push_back(move);
     }
   }

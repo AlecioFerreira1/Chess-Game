@@ -9,6 +9,11 @@ Pawn::Pawn(Types::Color color, Vec2 position) : Piece(type, color, position) {
 
 std::vector<Vec2> Pawn::getMoves(const BoardMatrix &boardMatrix){
   std::vector<Vec2> moves;
+  return moves;
+}
+
+std::vector<Vec2> Pawn::getMoves(const BoardMatrix &boardMatrix, const std::list<std::tuple<Vec2, Vec2>> &plays){
+  std::vector<Vec2> moves;
   Vec2 captures[2] = {
     {position.row + goFoward, position.col + goFoward},
     {position.row + goFoward, position.col - goFoward}
@@ -36,18 +41,18 @@ std::vector<Vec2> Pawn::getMoves(const BoardMatrix &boardMatrix){
     } 
   }
 
-  if(enPassant(boardMatrix)){
-    Vec2 lastSquareOfMov = std::get<1>(Utils::plays.back());
+  if(enPassant(boardMatrix, plays)){
+    Vec2 lastSquareOfMov = std::get<1>(plays.back());
     moves.push_back({lastSquareOfMov.row + goFoward, lastSquareOfMov.col});
   }
 
   return moves;
 }
 
-bool Chess::Pawn::enPassant(const BoardMatrix &boardMatrix){
-  if(Utils::plays.empty()) return false;
+bool Chess::Pawn::enPassant(const BoardMatrix &boardMatrix, const std::list<std::tuple<Vec2, Vec2>> &plays){
+  if(plays.empty()) return false;
 
-  const std::tuple<Vec2, Vec2> lastMove = Utils::plays.back();
+  const std::tuple<Vec2, Vec2> lastMove = plays.back();
   const Vec2 from = std::get<0>(lastMove), to = std::get<1>(lastMove);
   const Types::Piece lastPieceMoved = boardMatrix[to.row][to.col]->getType();
   const Types::Color color = boardMatrix[to.row][to.col]->getColor();
