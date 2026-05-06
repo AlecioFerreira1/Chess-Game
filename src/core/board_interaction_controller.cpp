@@ -20,10 +20,7 @@ void Chess::Core::BoardInteractionController::clearSelection(){
   const bool flipedCoords = Config::enableAutoFlip && game.getPlayerTurn() == 2;
   sf::Vector2i previusSelection = selectionState.getfrom().value();
 
-  if(flipedCoords)
-    previusSelection = {previusSelection.x, 7 - previusSelection.y};
-
-  boardRenderer.deSelect(previusSelection);
+  boardRenderer.deSelect(Utils::toBoard(previusSelection, flipedCoords));
   selectionState.clear();
   moveIndicatorRenderer.clear();
 }
@@ -47,7 +44,7 @@ void Chess::Core::BoardInteractionController::handleClick(sf::Vector2f mousePos)
       const bool flipedCoords = Config::enableAutoFlip && game.getPlayerTurn() == 2;
 
       selectionState.select(coords);
-      boardRenderer.select({coords.x, flipedCoords ? 7 - coords.y : coords.y});
+      boardRenderer.select(Utils::toBoard(coords, flipedCoords));
 
       sf::Vector2i pieceSelectedCoords = selectionState.getfrom().value();
       Piece *pieceSelected = boardMatrix[pieceSelectedCoords.y][pieceSelectedCoords.x];
@@ -71,8 +68,8 @@ void Chess::Core::BoardInteractionController::handleClick(sf::Vector2f mousePos)
       auto event = player.movePiece({from.y, from.x}, {to.y, to.x}, game.getBoard(), game.getPlays());
 
       game.setStatus(event);
-      game.updateStatus();
       game.changeTurn();
+      game.updateStatus();
       handleSound(event);
     }
 
@@ -90,10 +87,7 @@ sf::Vector2i Chess::Core::BoardInteractionController::convertMousePosToBoardCoor
     static_cast<int>((mousePos.y - upperBounds.y) / squareSize) 
   };
 
-  return {
-    boardCoords.x,
-    flipedCoords ? 7 - boardCoords.y : boardCoords.y 
-  };
+  return Utils::toView(boardCoords, flipedCoords);
 }
 
 void Chess::Core::BoardInteractionController::handleSound(Chess::Types::GameEvent event){

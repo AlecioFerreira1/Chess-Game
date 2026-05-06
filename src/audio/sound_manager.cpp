@@ -2,7 +2,7 @@
 
 namespace Chess::Audio{
     void SoundManager::playSound(const std::string& audioPath){
-        if(soundBuffer.loadFromFile(audioPath)){
+        if(soundBuffer.loadFromFile(audioPath) && Config::soundEnabled){
             sound.setBuffer(soundBuffer);
             sound.play();
         }

@@ -40,3 +40,13 @@ namespace Chess::Utils{
 sf::Vector2i Vec2::toVector2i(Vec2 coords){
   return {coords.col, coords.row};
 }
+
+sf::Vector2i Chess::Utils::toView(sf::Vector2i coord, bool flipped) {
+  if(!flipped) return coord;
+  return {7 - coord.x, 7 - coord.y};
+}
+
+sf::Vector2i Chess::Utils::toBoard(sf::Vector2i coord, bool flipped) {
+  if(!flipped) return coord;
+  return {7 - coord.x, 7 - coord.y};
+}

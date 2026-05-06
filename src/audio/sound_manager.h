@@ -2,6 +2,7 @@
 
 #include <SFML/Audio.hpp>
 #include <string>
+#include "../config/config.h"
 
 namespace Chess::Audio{
     class SoundManager{

@@ -105,29 +105,14 @@ bool Chess::Game::invalidMove(Vec2 from, Vec2 to){
 }
 
 bool Chess::Game::check(){
-  if(plays.empty()) return false;
-
-  const std::tuple<Vec2, Vec2> lastMove = plays.back();
-  const Vec2 pieceLocated = std::get<1>(lastMove);
   const BoardMatrix &boardMatrix = board.getInfo();
-  Piece *piece = boardMatrix[pieceLocated.row][pieceLocated.col];
+  Vec2 kingPos = whiteKingPos;
 
-  std::vector<Vec2> moves = piece->getMoves(boardMatrix);
-
-  if(piece->getType() == Types::Piece::Pawn){
-    Chess::Pawn *pawn = static_cast<Pawn *>(piece);
-    moves = pawn->getMoves(boardMatrix, plays);
-  }
-
-  for(const Vec2& pos : moves){
-    if(
-      boardMatrix[pos.row][pos.col] != nullptr &&
-      boardMatrix[pos.row][pos.col]->getType() == Types::Piece::King &&
-      boardMatrix[pos.row][pos.col]->getColor() != piece->getColor() 
-    ) { return true; }
-  }
-
-  return false;
+  if(playerTurn == 2)
+    kingPos = blackKingPos;
+  
+  King *king = static_cast<King *>(boardMatrix[kingPos.row][kingPos.col]);
+  return !king->notAttacked(king->getPosition(), boardMatrix);
 }
 
 bool Chess::Game::checkmate(){
@@ -157,7 +142,7 @@ bool Chess::Game::verifyStalemate(){
         for(const Vec2& target : moves){
           std::tuple<Vec2, Vec2> move = std::tuple(piece->getPosition(), target); 
 
-          if(momentaniumCheck(move) == false)
+          if(!momentaniumCheck(move))
             return false;
         }
       }
@@ -200,7 +185,7 @@ std::vector<Vec2> Chess::Game::filterMovesToAvoidInconsistencies(Piece *pieceSel
   }
 
   for(const Vec2 &move : moves){ 
-    if(momentaniumCheck({pieceSelected->getPosition(), move}) == false){
+    if(!momentaniumCheck({pieceSelected->getPosition(), move})){
       filteredMoves.push_back(move);
     }
   }
@@ -232,7 +217,7 @@ bool Chess::Game::momentaniumCheck(std::tuple<Vec2, Vec2> move){
 
   if(pieceFrom->getType() == Types::Piece::King){
     King *king = static_cast<King *>(pieceFrom);
-    return king->notAttacked(to, boardMatrix) == false;
+    return !king->notAttacked(to, boardMatrix);
   }
 
   Vec2 kingPos = whiteKingPos;
@@ -241,5 +226,5 @@ bool Chess::Game::momentaniumCheck(std::tuple<Vec2, Vec2> move){
     kingPos = blackKingPos;
 
   King *king = static_cast<King *>(boardMatrix[kingPos.row][kingPos.col]);
-  return king->notAttacked(king->getPosition(), boardMatrix) == false;
+  return !king->notAttacked(king->getPosition(), boardMatrix);
 }

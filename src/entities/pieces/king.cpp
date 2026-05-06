@@ -47,7 +47,7 @@ bool King::notAttacked(Vec2 move, const BoardMatrix &boardMatrix){
 
 std::vector<Vec2> King::getCastlingMoviments(const BoardMatrix &boardMatrix){
   std::vector<Vec2> moves;
-  const bool check = notAttacked(position, boardMatrix) == false;
+  const bool check = !notAttacked(position, boardMatrix);
 
   if(check) return moves;
 

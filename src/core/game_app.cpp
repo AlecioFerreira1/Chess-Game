@@ -1,6 +1,5 @@
 #include "game_app.h"
-
-#include <iostream>  //FOR DEBUG ONLY
+#include <iostream>
 
 Chess::Core::GameApp::GameApp() : 
   interactionController(
@@ -19,25 +18,16 @@ Chess::Core::GameApp::GameApp() :
 void Chess::Core::GameApp::run(){ 
   while(window.isOpen()){
     handleEvents();
-    game.updateStatus();
 
     if(game.finished()){
-      soundManager.playGameEndSound();  
+      soundManager.playGameEndSound();
+      currentScreen = Screen::GameOverDialog;
       render();
       break;
     }
 
     render();
   }
-
-  if(game.checkmate())         //////////FOR DEBUG ONLY (IOSTREAM)   ----> CHANGE TO A DIALOG WINDOW
-    std::cout<<"\nCHECKMATE!!!\n";
-
-  if(game.stalemate())         //////////FOR DEBUG ONLY (IOSTREAM)
-    std::cout<<"\nSTALEMATE!!!\n";
-
-  std::cout<<"\nJOGO FINALIZADO!\n";
-  std::cin.get();
 
   window.close();
   game.end();
@@ -90,10 +80,7 @@ void Chess::Core::GameApp::render(){
      static_cast<float>(h)}
   });
 
-  bool flipSides = false;
-
-  if(Config::enableAutoFlip && game.getPlayerTurn() == 2)
-    flipSides = true;
+  bool flipSides = Config::enableAutoFlip && game.getPlayerTurn() == 2;
   
   window.clear(sf::Color::White);
   

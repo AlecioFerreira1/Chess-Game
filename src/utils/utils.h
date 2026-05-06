@@ -20,4 +20,7 @@ namespace Chess::Utils{
   std::vector<Vec2> genSlidingMoves(
     Vec2 pos, const BoardMatrix &boardMatrix, std::vector<Vec2> directions
   );
+
+  sf::Vector2i toView(sf::Vector2i coord, bool flipped);
+  sf::Vector2i toBoard(sf::Vector2i coord, bool flipped);
 }   

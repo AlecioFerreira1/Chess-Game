@@ -8,6 +8,10 @@
 #include "../audio/sound_manager.h"
 
 namespace Chess::Core{
+  enum class Screen{
+    Playing, GameOverDialog
+  };
+
   class GameApp{
     private:
     sf::RenderWindow window;
@@ -18,7 +22,7 @@ namespace Chess::Core{
     SelectionState selectionState;
     BoardInteractionController interactionController;
     Audio::SoundManager soundManager;
-    bool checkAlertPlayed = false;
+    Screen currentScreen = Screen::Playing;
 
     void handleEvents();
     void getInput(std::optional<sf::Event>& event);

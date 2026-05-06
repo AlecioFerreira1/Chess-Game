@@ -18,10 +18,7 @@ void Chess::Render::MoveIndicatorRenderer::draw(
       mark.shape.getLocalBounds().size.y / 2.f
     });
 
-    sf::Vector2i markPos = mark.pos;
-
-    if(fliped)
-      markPos = {markPos.x, 7 - markPos.y};
+    sf::Vector2i markPos = Utils::toView(mark.pos, fliped);
 
     mark.shape.setPosition({ 
       boardPos.x + markPos.x * squareSize + squareSize / 2.f,

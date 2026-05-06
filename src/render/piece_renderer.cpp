@@ -40,14 +40,11 @@ void Chess::Render::PieceRenderer::draw(
     pieceSprite.getLocalBounds().size.y / 2.f
   });
 
-  Vec2 piecePos = piece->getPosition();
-  
-  if(fliped)
-    piecePos = {7 - piecePos.row, piecePos.col};
+  sf::Vector2i piecePos = Utils::toView(Vec2::toVector2i(piece->getPosition()), fliped);
   
   pieceSprite.setPosition({
-    boardPos.x + piecePos.col * squareSize + squareSize / 2.f,
-    boardPos.y + piecePos.row * squareSize + squareSize / 2.f
+    boardPos.x + piecePos.x * squareSize + squareSize / 2.f,
+    boardPos.y + piecePos.y * squareSize + squareSize / 2.f
   });
 
   renderWindow.draw(pieceSprite);
