@@ -40,9 +40,6 @@ void Chess::Core::GameApp::run(){
 
     render();
   }
-
-  window.close();
-  game.end();
 }
 
 void Chess::Core::GameApp::handleEvents(){
