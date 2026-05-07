@@ -6,6 +6,7 @@
 #include "../render/render.h"
 #include "board_interaction_controller.h"
 #include "../audio/sound_manager.h"
+#include "../gui/dialog_window/confirm_dialog.h"
 
 namespace Chess::Core{
   enum class Screen{
@@ -23,6 +24,7 @@ namespace Chess::Core{
     BoardInteractionController interactionController;
     Audio::SoundManager soundManager;
     Screen currentScreen = Screen::Playing;
+    Gui::ConfirmDialog gameOverScreen;
 
     void handleEvents();
     void getInput(std::optional<sf::Event>& event);

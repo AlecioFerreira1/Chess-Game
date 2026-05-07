@@ -1,7 +1,7 @@
 #include "simple_button.h"
 
 Chess::Gui::SimpleButton::SimpleButton(
-  const std::string &label, sf::Vector2f size, sf::Color backgroundColor, 
+  const std::string label, sf::Vector2f size, sf::Color backgroundColor, 
   sf::Color labelColor, unsigned int fontSize) : label(allTextures.getFont())
 {
   this->label.setString(label);
@@ -10,31 +10,41 @@ Chess::Gui::SimpleButton::SimpleButton(
   this->baseSize = size;
   shape.setFillColor(backgroundColor);
   shape.setSize(size);
+  shape.setPosition({0, 0});
 }
 
 void Chess::Gui::SimpleButton::draw(sf::RenderWindow &window){
   sf::Vector2u windowSize = window.getSize();
 
   sf::Vector2f scale = {
-    windowSize.x / Chess::Config::windowWidth, 
-    windowSize.y / Chess::Config::windowHeight
+    (float) windowSize.x / (float) Chess::Config::windowWidth, 
+    (float) windowSize.y / (float) Chess::Config::windowHeight
   };
 
-  shape.setSize({baseSize.x * scale.x, baseSize.y * scale.y});
+  float minScale = std::min(scale.x, scale.y);
+
+  shape.setSize({baseSize.x * minScale, baseSize.y * minScale});
   shape.setOutlineThickness(2);
-
-  shape.setPosition({
-    (windowSize.x / 2) - (baseSize.x * scale.x / 2), 
-    (windowSize.y / 2) - (baseSize.y * scale.y / 2)
-  });
-
-  label.setCharacterSize((unsigned int) (0.2 * baseSize.x * scale.x));
+  label.setCharacterSize((unsigned int) (0.6 * baseSize.y * scale.y));
 
   label.setPosition({
-    (windowSize.x / 2) - (label.getLocalBounds().size.x / 2), 
-    (windowSize.y / 2) - (label.getLocalBounds().size.y / 2), 
+    (shape.getPosition().x) + (shape.getSize().x / 2) - (label.getLocalBounds().size.x / 2), 
+    (shape.getPosition().y) + (shape.getSize().y / 2) - (label.getLocalBounds().size.y), 
   });
 
   window.draw(shape);
   window.draw(label);
+}
+
+void Chess::Gui::SimpleButton::setPosition(sf::Vector2f position){
+  shape.setPosition(position);
+}
+
+bool Chess::Gui::SimpleButton::isHovered(sf::Vector2f mousePos){
+  sf::Vector2f size = shape.getSize();
+  sf::Vector2f upperBounds = shape.getPosition();
+  sf::Vector2f lowerBounds = {upperBounds.x + size.x, upperBounds.y + size.y};
+
+  return (mousePos.x >= upperBounds.x && mousePos.y >= upperBounds.y) &&
+         (mousePos.x <= lowerBounds.x && mousePos.y <= lowerBounds.y);
 }

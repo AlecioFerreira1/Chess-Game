@@ -21,5 +21,6 @@ namespace Chess::Audio{
         void playGameEndSound();
         void playMoveCheckSound();
         void playMovePieceSound();
+        void playStartGameSound();
     };
 }

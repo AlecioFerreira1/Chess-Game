@@ -5,7 +5,12 @@ Chess::Core::GameApp::GameApp() :
   interactionController(
     game, selectionState, boardRenderer, 
     moveIndicatorRenderer, soundManager
-){
+  ),
+  gameOverScreen(
+    "Xeque-Mate!\nDeseja jogar novamente?", {300, 200}, 
+    sf::Color::White, sf::Color::Black, 20
+  )
+{
   window = sf::RenderWindow(
     sf::VideoMode({Config::windowWidth, Config::windowWidth}), 
     Config::windowTitle, sf::Style::Default
@@ -13,6 +18,7 @@ Chess::Core::GameApp::GameApp() :
 
   window.setVerticalSyncEnabled(true);
   game.start();
+  soundManager.playStartGameSound();
 }
 
 void Chess::Core::GameApp::run(){ 
@@ -20,10 +26,16 @@ void Chess::Core::GameApp::run(){
     handleEvents();
 
     if(game.finished()){
-      soundManager.playGameEndSound();
+      if(game.stalemate()){
+        gameOverScreen.setTitle("Jogo Empatado!\nDeseja jogar novamente?");
+      }
+
+      if(currentScreen == Screen::Playing){
+        soundManager.playGameEndSound();
+      }
+
       currentScreen = Screen::GameOverDialog;
       render();
-      break;
     }
 
     render();
@@ -58,8 +70,21 @@ void Chess::Core::GameApp::getInput(std::optional<sf::Event>& event){
       sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
       sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos);
       
-      if(boardClicked(worldPos)){
+      if(currentScreen == Screen::Playing && boardClicked(worldPos)){
         interactionController.handleClick(worldPos);
+      }
+
+      if(currentScreen == Screen::GameOverDialog){
+        if(gameOverScreen.getChoice(worldPos) == Gui::HoverType::Confirm){
+          game.restart();
+          soundManager.playStartGameSound();
+          currentScreen = Screen::Playing;
+        }
+
+        else if(gameOverScreen.getChoice(worldPos) == Gui::HoverType::Cancel){
+          game.end();
+          window.close();
+        }
       }
     }
   }
@@ -91,6 +116,9 @@ void Chess::Core::GameApp::render(){
     window, boardRenderer.getSquareSize(), 
     boardRenderer.getBoardPos(), flipSides
   );
+
+  if(currentScreen == Screen::GameOverDialog)
+    gameOverScreen.draw(window);
   
   window.setView(view);
   window.display();
@@ -115,6 +143,8 @@ void Chess::Core::GameApp::renderPieces(bool fliped){
 }
 
 bool Chess::Core::GameApp::boardClicked(sf::Vector2f mousePos){
+  if(currentScreen == Screen::GameOverDialog) return false;
+
   float squareSize = boardRenderer.getSquareSize();
   sf::Vector2f upperBounds = boardRenderer.getBoardPos();
 

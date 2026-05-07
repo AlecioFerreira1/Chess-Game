@@ -25,6 +25,7 @@ void Chess::Game::end(){
 void Chess::Game::restart(){
   end();
   start();
+  playerTurn = 1;
 }
 
 void Chess::Game::changeTurn(){

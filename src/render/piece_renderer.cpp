@@ -33,7 +33,7 @@ void Chess::Render::PieceRenderer::draw(
   sf::Sprite pieceSprite = piece->getColor() == Types::Color::White ?
                            whitePieces[index] : blackPieces[index];
   
-  pieceSprite.setScale({0.7, 0.7});
+  pieceSprite.setScale({0.006f * squareSize, 0.006f * squareSize});
 
   pieceSprite.setOrigin({
     pieceSprite.getLocalBounds().size.x / 2.f,

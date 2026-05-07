@@ -35,4 +35,8 @@ namespace Chess::Audio{
     void SoundManager::playMovePieceSound(){
         playSound("assets/audio/move-self.mp3");
     }
+
+    void SoundManager::playStartGameSound(){
+        playSound("assets/audio/game-start.mp3");
+    }
 }
