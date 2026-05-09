@@ -158,9 +158,10 @@ bool King::isSquareAttackedLinearly(Vec2 move, const BoardMatrix &boardMatrix){
       const bool enemyPieceIsBishopWithDiagonalCapture = j < 4 &&
                                                    piece->getType() == Types::Piece::Bishop;
       const bool enemyPieceIsRook = j >= 4 && piece->getType() == Types::Piece::Rook;
+      const bool enenmyPieceIsKing = i == 1 && piece->getType() == Types::Piece::King;
 
       if(
-        enemyPieceIsQueen || enemyPieceIsBishopWithDiagonalCapture || enemyPieceIsRook
+        enemyPieceIsQueen || enemyPieceIsBishopWithDiagonalCapture || enemyPieceIsRook || enenmyPieceIsKing
       ) { return true; }
 
       validDirs[j] = false; 
