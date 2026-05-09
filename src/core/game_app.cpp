@@ -30,6 +30,10 @@ void Chess::Core::GameApp::run(){
         gameOverScreen.setTitle("Jogo Empatado!\nDeseja jogar novamente?");
       }
 
+      else{
+        gameOverScreen.setTitle("Xeque-Mate!\nDeseja jogar novamente?");
+      }
+
       if(currentScreen == Screen::Playing){
         soundManager.playGameEndSound();
       }
@@ -76,6 +80,7 @@ void Chess::Core::GameApp::getInput(std::optional<sf::Event>& event){
           game.restart();
           soundManager.playStartGameSound();
           currentScreen = Screen::Playing;
+          gameOverScreen.resetState(window);
         }
 
         else if(gameOverScreen.getChoice(worldPos) == Gui::HoverType::Cancel){

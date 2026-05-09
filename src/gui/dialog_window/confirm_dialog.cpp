@@ -92,4 +92,8 @@ namespace Chess::Gui{
 
     return HoverType::None;
   }
+
+  void ConfirmDialog::resetState(sf::RenderWindow &window){
+    window.setMouseCursor(arrowCursor);
+  }
 }

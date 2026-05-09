@@ -30,5 +30,6 @@ namespace Chess::Gui{
     void setTitle(std::string title) { this->title.setString(title); }
     void handleHoverButtons(sf::RenderWindow &window);
     HoverType getChoice(sf::Vector2f mousePos);
+    void resetState(sf::RenderWindow &window);
   };
 }
