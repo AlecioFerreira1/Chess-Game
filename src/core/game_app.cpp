@@ -25,7 +25,7 @@ void Chess::Core::GameApp::run(){
   while(window.isOpen()){
     handleEvents();
 
-    if(game.finished()){
+    if(currentScreen == Screen::Playing && game.finished()){
       if(game.stalemate()){
         gameOverScreen.setTitle("Jogo Empatado!\nDeseja jogar novamente?");
       }
@@ -34,10 +34,7 @@ void Chess::Core::GameApp::run(){
         gameOverScreen.setTitle("Xeque-Mate!\nDeseja jogar novamente?");
       }
 
-      if(currentScreen == Screen::Playing){
-        soundManager.playGameEndSound();
-      }
-
+      soundManager.playGameEndSound();
       currentScreen = Screen::GameOverDialog;
       render();
     }
